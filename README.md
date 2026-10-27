@@ -103,6 +103,10 @@ Unit tests cover the metadata math (no model files needed):
   table.
 - **Engram file → one lazily-read `per_layer_token_embd`**, streamed in chunks so it is never held in memory.
 
+## Security
+See [SECURITY.md](SECURITY.md): how to report issues, what the tool does and doesn't touch, and how to
+verify the weights' provenance.
+
 ## Credits & license
 - Model: [deepseek-ai/DeepSeek-V4.1-Flash-1017](https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017) (MIT).
 - Quantization: [ISTA-DASLab](https://huggingface.co/ISTA-DASLab) GSQ-RCO (MIT). All the quality is theirs; this

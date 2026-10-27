@@ -171,7 +171,7 @@ def main():
             continue                                              # GGUFWriter writes it
         vt, sub = reftypes.get(name, (f.types[0], f.types[-1] if f.types[0] == VT.ARRAY else None))
         w.add_key_value(name, f.contents(), vt, sub_type=sub)
-    w.add_key_value("general.repacked_by", "github.com/HumanjavaEnterprises/deepseek-v41-upstream tools/repack-dsv41-ista.py", VT.STRING)
+    w.add_key_value("general.repacked_by", "deepseek-v41-upstream repack-dsv41-ista.py", VT.STRING)
     for k, (v, t) in d.items():
         if k in reftypes:
             t = reftypes[k][1] if isinstance(v, list) else reftypes[k][0]
