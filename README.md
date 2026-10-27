@@ -22,14 +22,18 @@ error loading model: array key not found: deepseek41.attention.kv_source_layers
 
 ## Why this one
 
-| | size | runs on upstream llama.cpp |
-|---|---|---|
-| ISTA GSQ-RCO IQ2_XXS (original) | 129 GiB + 103 GB Engram file | ❌ needs Strata |
-| unsloth UD-IQ1_M (upstream format) | ~250 GB, Engram embedded | ✅, but needs ~250 GB of RAM + VRAM |
-| **this repack** | 4 shards, 248 GB on disk, **~130 GB resident** | ✅ |
+| | quantization | on disk | in RAM + VRAM | stock llama.cpp |
+|---|---|---|---|---|
+| ISTA GSQ-RCO IQ2_XXS (original) | GSQ-RCO | 129 GiB + 103 GB Engram file | ~138 GB | ❌ needs Strata |
+| unsloth UD-IQ1_M | Unsloth Dynamic | 250 GB | ~140 GB | ✅ |
+| **this repack** | **GSQ-RCO (ISTA's, untouched)** | 248 GB | **~138 GB** | ✅ |
 
-The Engram table (103 GB) becomes one `per_layer_token_embd` tensor, which upstream reads **lazily from disk**. It
-stays on the SSD, so the part that has to fit in RAM + VRAM is about 130 GB.
+Same size class as unsloth's smallest upstream quant. The difference is the quantization: this is **ISTA-DASLab's
+GSQ-RCO**, now runnable on stock llama.cpp. ISTA's model card has their quality evals. We haven't run an independent
+quality comparison yet.
+
+In both upstream-format files the 103 GB Engram table is read **lazily from disk** (`per_layer_token_embd`), so
+it stays on your SSD. Only ~138 GB has to fit in RAM + VRAM.
 
 ## Run it
 
