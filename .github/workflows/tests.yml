@@ -1,0 +1,19 @@
+name: tests
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: upstream gguf-py (llama.cpp de5122d8)
+        run: |
+          git init -q llama.cpp && cd llama.cpp
+          git remote add origin https://github.com/ggml-org/llama.cpp
+          git fetch -q --depth 1 origin de5122d879d00d2895c36be7e0cee94105aeeabd && git checkout -q FETCH_HEAD
+          pip install -q numpy ./gguf-py
+      - run: python -m unittest discover -v tests
