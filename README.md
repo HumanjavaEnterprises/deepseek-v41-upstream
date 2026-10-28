@@ -89,11 +89,11 @@ Hardware: 1× RTX PRO 6000 Blackwell Max-Q (96 GB), Xeon w5-3525 (16 cores), 256
 |---|---|---|
 | all experts in RAM, 16 threads | 70 | 18.5 |
 | experts of layers 0-21 on card | 123 | 31.9 |
-| experts of layers 0-27 on card, `-ub 2048` | **448** | **39-40** |
-| layers 0-24 on card + `ngram-mod`, 64k ctx (fits a 96 GB card with headroom) | ~250 | 37.8 code edits / 32 prose |
+| experts of layers 0-27 on card, `-ub 2048` (short ctx only; 96.1 GB peak at 64k) | **448** | 39-40 |
+| **layers 0-24 on card + `ngram-mod`, 64k ctx (what we run; 85.9 GB peak)** | ~250 | **37.8 code edits / 32 prose** |
 
 Sanity check: 4/4 correct on a small fact, arithmetic, code and science set. This is a smoke test, not a quality
-benchmark. For quality, see ISTA's model card.
+benchmark. For quality, see [EVALS.md](EVALS.md).
 
 ## Repack it yourself
 
