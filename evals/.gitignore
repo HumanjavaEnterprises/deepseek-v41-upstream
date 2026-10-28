@@ -1,0 +1,5 @@
+wikitext-2-test.txt
+gsm8k-250.json
+mmlu-500.json
+*.log
+*.result.json

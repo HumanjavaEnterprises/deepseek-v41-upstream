@@ -29,8 +29,7 @@ error loading model: array key not found: deepseek41.attention.kv_source_layers
 | **this repack** | **GSQ-RCO (ISTA's, untouched)** | 248 GB | **~138 GB** | ✅ |
 
 Same size class as unsloth's smallest upstream quant. The difference is the quantization: this is **ISTA-DASLab's
-GSQ-RCO**, now runnable on stock llama.cpp. ISTA's model card has their quality evals. We haven't run an independent
-quality comparison yet.
+GSQ-RCO**, now runnable on stock llama.cpp. Our head-to-head is below and in [EVALS.md](EVALS.md).
 
 In both upstream-format files the 103 GB Engram table is read **lazily from disk** (`per_layer_token_embd`), so
 it stays on your SSD. Only ~138 GB has to fit in RAM + VRAM.
@@ -66,6 +65,20 @@ Check your download:
 ```bash
 cd ds41/ && sha256sum -c SHA256SUMS
 ```
+
+## Quality vs unsloth
+
+Head-to-head against unsloth's UD-IQ1_M (same size class), identical setup. Details and raw data in
+[EVALS.md](EVALS.md).
+
+| | ISTA GSQ-RCO (this) | unsloth UD-IQ1_M |
+|---|---|---|
+| wikitext-2 PPL | 3.507 ± 0.040 | **3.333 ± 0.037** |
+| GSM8K (250) | 97.2% | 96.4% (tie) |
+| MMLU (500) | 84.4% | 84.6% (tie) |
+| decode tok/s | **31.9** | 24.3 |
+
+Same task accuracy, ~31% faster decode. unsloth's quant has lower perplexity.
 
 ## Benchmarks
 
