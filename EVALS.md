@@ -1,9 +1,29 @@
-# Evals: ISTA GSQ-RCO IQ2_XXS (this repack) vs unsloth UD-IQ1_M
+# Evals: ISTA GSQ-RCO IQ2_XXS (this repack) vs unsloth UD-IQ1_M vs the full-precision API
 
 Two upstream-format quants of DeepSeek-V4.1-Flash-1017 in the same size class (~138 vs ~140 GB resident), run
-under identical conditions.
+under identical conditions, plus DeepSeek's hosted API as the full-precision reference.
 
-## Results
+## Full-precision reference (DeepSeek API)
+
+The same questions, prompts and settings (temp 0, thinking off) sent to DeepSeek's hosted API, model
+`deepseek-flash`, which reports itself as "DeepSeek-V4.1-Flash" (2026-10-27).
+
+| | ISTA GSQ-RCO (this) | unsloth UD-IQ1_M | **DeepSeek API (full precision)** |
+|---|---|---|---|
+| GSM8K (250) | 243 (97.2%) | 241 (96.4%) | 242 (96.8%) |
+| MMLU (500) | 422 (84.4%) | 423 (84.6%) | **435 (87.0%)** |
+
+- **Math survived 2-bit compression intact.** On GSM8K both quants match the full model (p = 1.0 for each).
+- **Knowledge recall lost ~2.5 points.** On MMLU the full model beats both quants: it alone got 23 questions right vs
+  ISTA's 10 (p = 0.035), and 21 vs unsloth's 9 (p = 0.043). Both quants lose about the same amount, which fits
+  unsloth's lower perplexity not turning into better task scores.
+- **Caveats:** the API doesn't confirm it serves exactly the `-1017` release, and hosted serving may differ from a
+  local run in ways we can't see. On the first API pass, 4 GSM8K questions came back as empty replies. They were
+  re-asked and all 4 answered correctly. The harness now retries empty replies, and those rows are marked in
+  `evals/results/deepseek-api-flash.jsonl`. The API can't score perplexity: it returns probabilities only for text
+  it generates.
+
+## Quant vs quant
 
 | | **ISTA GSQ-RCO IQ2_XXS** (this repack) | **unsloth UD-IQ1_M** (rev `60ad365`) | read |
 |---|---|---|---|
@@ -39,6 +59,9 @@ the original model's token distribution more closely (lower perplexity).
 ```bash
 python3 evals/fetch_data.py                       # wikitext-2, GSM8K, MMLU samples (fixed seeds)
 LLAMA_BIN=/path/to/llama.cpp/build/bin evals/run-model.sh <tag> <model-shard-00001.gguf>
+# the API reference (any OpenAI-compatible endpoint):
+EVAL_URL=https://api.deepseek.com/chat/completions EVAL_MODEL=deepseek-flash EVAL_KEY_FILE=<key file> \
+  python3 evals/evals.py - deepseek-api-flash
 ```
 Per-question results for both runs are in `evals/results/`.
 

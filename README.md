@@ -66,19 +66,20 @@ Check your download:
 cd ds41/ && sha256sum -c SHA256SUMS
 ```
 
-## Quality vs unsloth
+## Quality vs unsloth and full precision
 
 Head-to-head against unsloth's UD-IQ1_M (same size class), identical setup. Details and raw data in
 [EVALS.md](EVALS.md).
 
-| | ISTA GSQ-RCO (this) | unsloth UD-IQ1_M |
-|---|---|---|
-| wikitext-2 PPL | 3.507 ± 0.040 | **3.333 ± 0.037** |
-| GSM8K (250) | 97.2% | 96.4% (tie) |
-| MMLU (500) | 84.4% | 84.6% (tie) |
-| decode tok/s | **31.9** | 24.3 |
+| | ISTA GSQ-RCO (this) | unsloth UD-IQ1_M | DeepSeek API (full precision) |
+|---|---|---|---|
+| wikitext-2 PPL | 3.507 ± 0.040 | **3.333 ± 0.037** | n/a |
+| GSM8K (250) | 97.2% | 96.4% | 96.8% (all three tie) |
+| MMLU (500) | 84.4% | 84.6% | **87.0%** (beats both quants, p < 0.05) |
+| decode tok/s | **31.9** | 24.3 | n/a |
 
-Same task accuracy, ~31% faster decode. unsloth's quant has lower perplexity.
+Same task accuracy, ~31% faster decode. unsloth's quant has lower perplexity. Against the full-precision model
+(DeepSeek's API), math is intact and both 2-bit quants give up ~2.5 points of MMLU knowledge recall.
 
 ## Benchmarks
 

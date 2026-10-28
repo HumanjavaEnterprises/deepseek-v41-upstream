@@ -1,13 +1,26 @@
 #!/usr/bin/env python3
-"""GSM8K + MMLU against a running llama-server (temp 0, thinking off). usage: evals.py PORT TAG"""
+"""GSM8K + MMLU, temp 0, thinking off. usage: evals.py PORT TAG   (a local llama-server on 127.0.0.1:PORT)
+or, for an OpenAI-compatible API:  EVAL_URL=https://api.deepseek.com/chat/completions EVAL_MODEL=deepseek-flash
+  EVAL_KEY_FILE=<file holding the key> evals.py - TAG"""
 import json, re, sys, time, urllib.request, os
 port, tag = sys.argv[1], sys.argv[2]
 E = os.path.dirname(os.path.abspath(__file__))
+URL = os.environ.get("EVAL_URL") or f"http://127.0.0.1:{port}/v1/chat/completions"
+HDR = {"Content-Type": "application/json"}
+if os.environ.get("EVAL_KEY_FILE"):
+    HDR["Authorization"] = "Bearer " + open(os.environ["EVAL_KEY_FILE"]).read().strip()
+BODY = {"model": os.environ["EVAL_MODEL"], "thinking": {"type": "disabled"}} if os.environ.get("EVAL_URL") \
+    else {"chat_template_kwargs": {"enable_thinking": False}}
 def chat(msg, n):
-    r = urllib.request.Request(f"http://127.0.0.1:{port}/v1/chat/completions", json.dumps({
-        "messages": [{"role": "user", "content": msg}], "max_tokens": n, "temperature": 0,
-        "chat_template_kwargs": {"enable_thinking": False}}).encode(), {"Content-Type": "application/json"})
-    return json.load(urllib.request.urlopen(r, timeout=900))["choices"][0]["message"]["content"]
+    for k in range(6):
+        try:
+            r = urllib.request.Request(URL, json.dumps({"messages": [{"role": "user", "content": msg}],
+                "max_tokens": n, "temperature": 0, **BODY}).encode(), HDR)
+            c = json.load(urllib.request.urlopen(r, timeout=900))["choices"][0]["message"]["content"] or ""
+            if c.strip() or k == 5: return c   # an empty reply is retried (seen on the hosted API)
+        except (urllib.error.URLError, TimeoutError):
+            if k == 5: raise
+        time.sleep(5 * 2 ** k)
 def num(s):
     s = s.replace(",", "").replace("$", "")
     m = re.findall(r"-?\d+(?:\.\d+)?", s)
