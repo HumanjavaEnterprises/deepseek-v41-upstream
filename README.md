@@ -49,7 +49,7 @@ llama-server -m DeepSeek-V4.1-Flash-1017-GSQ-RCO-upstream-IQ2_XXS-00001-of-00004
 **Smaller card:** keep all routed experts in RAM (~125 GB of RAM):
 ```bash
 llama-server -m DeepSeek-V4.1-Flash-1017-GSQ-RCO-upstream-IQ2_XXS-00001-of-00004.gguf \
-  -c 16384 -ngl 99 -t <physical cores> -ot 'exps=CPU'
+  -c 16384 -ngl 99 -t <physical cores> -ub 2048 -ot 'exps=CPU'
 ```
 
 See [RECIPE.md](RECIPE.md) for the full tuning sweep and what each flag is worth.

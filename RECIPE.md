@@ -23,12 +23,15 @@ put as many expert layers on the GPU as fit, and to make the CPU side as efficie
 | 0-27 on GPU | 182 / **448** | **39-40** |
 
 ## Rules that fell out
-1. **Threads = physical cores, not hyperthreads.** 16 beat 24 and 32. The extra threads fight over the same memory
-   bandwidth.
+1. **Threads: bench physical cores vs nearly all hyperthreads.** For this IQ2_XXS quant, 16 beat 24 and 32: the
+   extra threads fight over the same memory bandwidth.
+   It depends on the quant, though: on the same box, DeepSeek-V4-Flash at unsloth UD-Q4_K_XL (all experts in RAM)
+   ran **30 threads at 23.4 tok/s vs 19.6 at 16**. Heavier-to-decode formats can use the extra threads.
 2. **Every expert layer you move onto the GPU helps**, roughly linearly. Fill the card, but leave room for KV cache
    and compute buffers.
 3. **`-ub 2048` gives about 2.5x prefill** when experts are split across CPU and GPU (bigger batches per expert
-   fetch).
+   fetch), and **3.2x** (51.6 -> 166 tok/s pp4096) with all experts in RAM on V4-Flash Q4_K_XL, for ~0.5 GB more
+   VRAM. Decode is unchanged.
 4. **Mind the real peak, not the file size.** Layers 0-27 at 64k context peaked at **96.1 GB** of VRAM, which is
    too tight on a 96 GB card. Layers 0-24 peak at **85.9 GB**, which is what we run.
 5. **A cold cache lies.** Our first partial-offload test showed 1.8 tok/s: 30 threads with the CPU busy. Bench on an
