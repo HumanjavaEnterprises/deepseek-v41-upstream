@@ -101,7 +101,7 @@ quantized from BF16 with ISTA's type map and our own imatrix ([build/](build/REA
 **What carries over from OBLITERATUS's weights**
 - This is a quant of [OBLITERATUS/DeepSeek-V4.1-Flash-1017-obliterated](https://huggingface.co/OBLITERATUS/DeepSeek-V4.1-Flash-1017-obliterated)
   (rev `29a9f99`) with the refusal direction already ablated. We did no ablation, fine-tuning or merging of our own.
-- On our 20-prompt check, refusals fall from 19 (base model, same quant recipe) to 7. GSM8K and MMLU match the base quant.
+- On our 20-prompt check, refusals fall from 19 (the base model in ISTA's quant, whose type map we reuse) to 7. GSM8K and MMLU match the base quant.
 
 **What we haven't verified**
 - **Whether it's as uncensored as the full-precision original.** Quantizing to ~2.6 bits per weight can partly
