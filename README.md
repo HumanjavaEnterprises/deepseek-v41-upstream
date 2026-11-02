@@ -24,7 +24,7 @@ error loading model: array key not found: deepseek41.attention.kv_source_layers
 abliterated model, a merge) to a one-card GGUF in the same size class, with our own imatrix and ISTA's type map.
 The first build made this way is
 [HumanjavaEnterprises/DeepSeek-V4.1-Flash-1017-obliterated-upstream-GGUF](https://huggingface.co/HumanjavaEnterprises/DeepSeek-V4.1-Flash-1017-obliterated-upstream-GGUF)
-(abliterated: refusals reduced, not removed; capability matches the base quant, see [EVALS.md](EVALS.md#the-obliterated-build-our-imatrix-2026-11-02)).
+(abliterated: refusals reduced, not removed; capability matches the base quant. What it is and isn't, including what we haven't verified: [EVALS.md](EVALS.md#what-this-build-is-and-isnt)).
 
 ## Why this one
 

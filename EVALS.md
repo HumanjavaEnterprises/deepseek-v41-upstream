@@ -95,3 +95,32 @@ quantized from BF16 with ISTA's type map and our own imatrix ([build/](build/REA
 - **Speed is not explained yet.** Token-weighted decode was 8.8 tok/s, but the median answer ran at 19.9 and the
   refusal-check server (same file, `ngram-mod`) ran at 22-24. A handful of long answers decoded at ~3 tok/s. It
   needs a clean rerun before we read anything into it.
+
+### What this build is and isn't
+
+**What carries over from OBLITERATUS's weights**
+- This is a quant of [OBLITERATUS/DeepSeek-V4.1-Flash-1017-obliterated](https://huggingface.co/OBLITERATUS/DeepSeek-V4.1-Flash-1017-obliterated)
+  (rev `29a9f99`) with the refusal direction already ablated. We did no ablation, fine-tuning or merging of our own.
+- On our 20-prompt check, refusals fall from 19 (base model, same quant recipe) to 7. GSM8K and MMLU match the base quant.
+
+**What we haven't verified**
+- **Whether it's as uncensored as the full-precision original.** Quantizing to ~2.6 bits per weight can partly
+  restore behavior that an ablation removed. We haven't measured OBLITERATUS's BF16 weights (they don't fit on our
+  hardware), so we can't say how much of the remaining 7 soft refusals come from their ablation and how much from our
+  quantization.
+- **Any refusal or safety claims OBLITERATUS makes.** We haven't reproduced them.
+- **Breadth.** 20 English prompts, temperature 0, thinking off, a keyword heuristic read by hand. That isn't a
+  benchmark. Other topics, languages, long multi-turn chats or thinking mode may behave differently.
+- **Decode speed.** It was low in our evals and isn't explained yet.
+
+**What it is not**
+- Not safety-tuned, filtered or moderated. It will produce content a stock model refuses, and it may still refuse
+  some requests. You are responsible for how you use it.
+- Not a claim that abliteration preserves every capability. We measured math (GSM8K), knowledge (MMLU) and
+  perplexity, nothing else.
+
+**What we plan to check next**, with results added here as they land:
+1. Refusals on a higher-bit quant of the same weights, to separate quantization loss from the ablation itself.
+2. If quantization is the cause: keep the most affected layers at higher precision and requantize.
+3. A clean speed rerun and tuning sweep.
+4. A larger refusal set and a KL-divergence check against a higher-precision reference.
