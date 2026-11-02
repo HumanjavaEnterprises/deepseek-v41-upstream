@@ -75,7 +75,7 @@ Per-question results for both runs are in `evals/results/`.
 
 [DeepSeek-V4.1-Flash-1017-obliterated-upstream-GGUF](https://huggingface.co/HumanjavaEnterprises/DeepSeek-V4.1-Flash-1017-obliterated-upstream-GGUF):
 [OBLITERATUS/DeepSeek-V4.1-Flash-1017-obliterated](https://huggingface.co/OBLITERATUS/DeepSeek-V4.1-Flash-1017-obliterated)
-quantized from BF16 with ISTA's type map and our own imatrix ([BUILD.md](BUILD.md)). Same harness, same flags.
+quantized from BF16 with ISTA's type map and our own imatrix ([build/](build/README.md)). Same harness, same flags.
 
 | | **obliterated, our imatrix** | ISTA GSQ-RCO (base model) |
 |---|---|---|

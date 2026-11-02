@@ -1,4 +1,4 @@
-"""Unit tests for tools/convert-ds41-hf.py (tensor-name mapping) and tools/fold-imatrix-groups.py (synthetic GGUFs).
+"""Unit tests for build/tools/convert-ds41-hf.py (tensor-name mapping) and build/tools/fold-imatrix-groups.py (synthetic GGUFs).
 No model files, torch or transformers needed.
 Run: GGUF_PY=/path/to/llama.cpp/gguf-py python3 -m unittest discover tests"""
 import importlib.util, os, tempfile, unittest

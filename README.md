@@ -20,7 +20,7 @@ error loading model: array key not found: deepseek41.attention.kv_source_layers
 **Ready to run:** the repacked GGUF is on Hugging Face (`hf download … --local-dir ds41/`):
 [HumanjavaEnterprises/DeepSeek-V4.1-Flash-1017-GSQ-RCO-upstream-GGUF](https://huggingface.co/HumanjavaEnterprises/DeepSeek-V4.1-Flash-1017-GSQ-RCO-upstream-GGUF)
 
-**Build your own from BF16:** [BUILD.md](BUILD.md) takes any DeepSeek-V4.1-Flash checkpoint (a fine-tune, an
+**Build your own from BF16:** [build/](build/README.md) takes any DeepSeek-V4.1-Flash checkpoint (a fine-tune, an
 abliterated model, a merge) to a one-card GGUF in the same size class, with our own imatrix and ISTA's type map.
 The first build made this way is
 [HumanjavaEnterprises/DeepSeek-V4.1-Flash-1017-obliterated-upstream-GGUF](https://huggingface.co/HumanjavaEnterprises/DeepSeek-V4.1-Flash-1017-obliterated-upstream-GGUF)
@@ -139,5 +139,5 @@ verify the weights' provenance.
 - Obliterated build: weights by [OBLITERATUS](https://huggingface.co/OBLITERATUS/DeepSeek-V4.1-Flash-1017-obliterated)
   (refusal-direction ablation after [Arditi et al. 2024](https://arxiv.org/abs/2406.11717)). The bootstrap imatrix is
   [unsloth's](https://huggingface.co/unsloth/DeepSeek-V4.1-Flash-1017-GGUF) (MIT). The calibration data's sources and
-  licenses are in [calibration/SOURCES.md](calibration/SOURCES.md).
+  licenses are in [build/calibration/SOURCES.md](build/calibration/SOURCES.md).
 - This repo: MIT, by [@vveerrgg](https://github.com/vveerrgg) / Humanjava Enterprises.
