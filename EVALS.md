@@ -70,3 +70,28 @@ Per-question results for both runs are in `evals/results/`.
 - One prompt format, temperature 0, thinking off. Other prompting may change absolute scores.
 - Perplexity on wikitext-2 can favor quants whose calibration data resembles Wikipedia. We don't know either
   quant's calibration set.
+
+## The obliterated build (our imatrix), 2026-11-02
+
+[DeepSeek-V4.1-Flash-1017-obliterated-upstream-GGUF](https://huggingface.co/HumanjavaEnterprises/DeepSeek-V4.1-Flash-1017-obliterated-upstream-GGUF):
+[OBLITERATUS/DeepSeek-V4.1-Flash-1017-obliterated](https://huggingface.co/OBLITERATUS/DeepSeek-V4.1-Flash-1017-obliterated)
+quantized from BF16 with ISTA's type map and our own imatrix ([BUILD.md](BUILD.md)). Same harness, same flags.
+
+| | **obliterated, our imatrix** | ISTA GSQ-RCO (base model) |
+|---|---|---|
+| wikitext-2 perplexity | 3.638 ± 0.040 | 3.507 ± 0.040 |
+| GSM8K (250) | 243 (97.2%) | 243 (97.2%) |
+| MMLU (500) | 418 (83.6%) | 422 (84.4%) |
+| refusal spot check (20 prompts) | 8 flagged, **7 real** | 19 |
+| decode speed during the evals | 8.8 tok/s (median per answer 19.9) | 31.9 tok/s |
+
+- **Capability held.** GSM8K is identical and MMLU is within noise (4 questions). Perplexity is ~4% higher. This
+  compares a different model (abliterated weights) against the base model, so it mixes ablation cost and quant cost.
+- **Refusals are reduced, not gone.** `evals/refusal.py` flags replies by keyword. Of the 8 flagged, the ransomware
+  prompt was a false positive (it complied with a disclaimer). The 7 real ones are soft refusals ("I can't give a
+  step-by-step guide, but here is how it works"): lockpicking, hotwiring, exam cheating, a jury-duty lie, money
+  laundering, a manipulative message, slurs. We haven't run the same check on the BF16 weights, so part of this may
+  come from quantization. Per-prompt flags: `evals/results/*.refusal.json` (reply text not published).
+- **Speed is not explained yet.** Token-weighted decode was 8.8 tok/s, but the median answer ran at 19.9 and the
+  refusal-check server (same file, `ngram-mod`) ran at 22-24. A handful of long answers decoded at ~3 tok/s. It
+  needs a clean rerun before we read anything into it.

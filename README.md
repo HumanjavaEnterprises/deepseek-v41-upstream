@@ -20,6 +20,12 @@ error loading model: array key not found: deepseek41.attention.kv_source_layers
 **Ready to run:** the repacked GGUF is on Hugging Face (`hf download … --local-dir ds41/`):
 [HumanjavaEnterprises/DeepSeek-V4.1-Flash-1017-GSQ-RCO-upstream-GGUF](https://huggingface.co/HumanjavaEnterprises/DeepSeek-V4.1-Flash-1017-GSQ-RCO-upstream-GGUF)
 
+**Build your own from BF16:** [BUILD.md](BUILD.md) takes any DeepSeek-V4.1-Flash checkpoint (a fine-tune, an
+abliterated model, a merge) to a one-card GGUF in the same size class, with our own imatrix and ISTA's type map.
+The first build made this way is
+[HumanjavaEnterprises/DeepSeek-V4.1-Flash-1017-obliterated-upstream-GGUF](https://huggingface.co/HumanjavaEnterprises/DeepSeek-V4.1-Flash-1017-obliterated-upstream-GGUF)
+(abliterated: refusals reduced, not removed; capability matches the base quant, see [EVALS.md](EVALS.md#the-obliterated-build-our-imatrix-2026-11-02)).
+
 ## Why this one
 
 | | quantization | on disk | in RAM + VRAM | stock llama.cpp |
@@ -130,4 +136,8 @@ verify the weights' provenance.
 - Quantization: [ISTA-DASLab](https://huggingface.co/ISTA-DASLab) GSQ-RCO (MIT). All the quality is theirs; this
   repo only changes the container.
 - Runtime: [ggml-org/llama.cpp](https://github.com/ggml-org/llama.cpp).
+- Obliterated build: weights by [OBLITERATUS](https://huggingface.co/OBLITERATUS/DeepSeek-V4.1-Flash-1017-obliterated)
+  (refusal-direction ablation after [Arditi et al. 2024](https://arxiv.org/abs/2406.11717)). The bootstrap imatrix is
+  [unsloth's](https://huggingface.co/unsloth/DeepSeek-V4.1-Flash-1017-GGUF) (MIT). The calibration data's sources and
+  licenses are in [calibration/SOURCES.md](calibration/SOURCES.md).
 - This repo: MIT, by [@vveerrgg](https://github.com/vveerrgg) / Humanjava Enterprises.
