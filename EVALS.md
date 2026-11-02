@@ -73,7 +73,7 @@ Per-question results for both runs are in `evals/results/`.
 
 ## The obliterated build (our imatrix), 2026-11-02
 
-[DeepSeek-V4.1-Flash-1017-obliterated-upstream-GGUF](https://huggingface.co/HumanjavaEnterprises/DeepSeek-V4.1-Flash-1017-obliterated-upstream-GGUF):
+[HumanjavaEnterprises/DeepSeek-V4.1-Flash-1017-GSQ-RCO-upstream-GGUF `obliterated/`](https://huggingface.co/HumanjavaEnterprises/DeepSeek-V4.1-Flash-1017-GSQ-RCO-upstream-GGUF/tree/main/obliterated):
 [OBLITERATUS/DeepSeek-V4.1-Flash-1017-obliterated](https://huggingface.co/OBLITERATUS/DeepSeek-V4.1-Flash-1017-obliterated)
 quantized from BF16 with ISTA's type map and our own imatrix ([BUILD.md](BUILD.md)). Same harness, same flags.
 
