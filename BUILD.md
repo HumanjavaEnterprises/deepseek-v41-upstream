@@ -3,7 +3,7 @@
 The [repack](README.md#repack-it-yourself) only re-containers ISTA's finished quant. This path starts from **full
 BF16 weights** (a fine-tune, an abliterated model, a merge) and ends with a quant in ISTA's GSQ-RCO size class that
 runs on one 96 GB card + RAM under stock llama.cpp. It is how we built
-[HumanjavaEnterprises/DeepSeek-V4.1-Flash-1017-GSQ-RCO-upstream-GGUF `obliterated/`](https://huggingface.co/HumanjavaEnterprises/DeepSeek-V4.1-Flash-1017-GSQ-RCO-upstream-GGUF/tree/main/obliterated)
+[DeepSeek-V4.1-Flash-1017-obliterated-upstream-GGUF](https://huggingface.co/HumanjavaEnterprises/DeepSeek-V4.1-Flash-1017-obliterated-upstream-GGUF)
 from [OBLITERATUS/DeepSeek-V4.1-Flash-1017-obliterated](https://huggingface.co/OBLITERATUS/DeepSeek-V4.1-Flash-1017-obliterated).
 
 Everything below ran on 1× RTX PRO 6000 (96 GB), a 16-core Xeon w5-3525, 256 GB DDR5 and NVMe/RAID storage, with

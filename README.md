@@ -23,7 +23,7 @@ error loading model: array key not found: deepseek41.attention.kv_source_layers
 **Build your own from BF16:** [BUILD.md](BUILD.md) takes any DeepSeek-V4.1-Flash checkpoint (a fine-tune, an
 abliterated model, a merge) to a one-card GGUF in the same size class, with our own imatrix and ISTA's type map.
 The first build made this way is
-[HumanjavaEnterprises/DeepSeek-V4.1-Flash-1017-GSQ-RCO-upstream-GGUF `obliterated/`](https://huggingface.co/HumanjavaEnterprises/DeepSeek-V4.1-Flash-1017-GSQ-RCO-upstream-GGUF/tree/main/obliterated)
+[HumanjavaEnterprises/DeepSeek-V4.1-Flash-1017-obliterated-upstream-GGUF](https://huggingface.co/HumanjavaEnterprises/DeepSeek-V4.1-Flash-1017-obliterated-upstream-GGUF)
 (abliterated: refusals reduced, not removed; capability matches the base quant, see [EVALS.md](EVALS.md#the-obliterated-build-our-imatrix-2026-11-02)).
 
 ## Why this one
