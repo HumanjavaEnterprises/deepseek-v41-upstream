@@ -106,12 +106,13 @@ tokens, three code prompts (explain a 4K-token file, write an LRU module, refact
 |---|---|---|---|
 | experts of layers 25-39 in RAM (old) | 20.7-26.7 | ~300 | ~48 GB |
 | all experts in RAM + `--moe-cache-mib 80000` | 52-64 | ~360 | 126 GiB |
-| **same + `-lm none`** | **63-74** | **~580** | 126 GiB |
+| same + `-lm none` | 63-74 | ~580 | 126 GiB |
+| **same, cache 72000 + DSpark drafter (`--spec-draft-n-max 2`)** | **code 80-102, prose 68-74** | ~500 | 127 GiB |
 
 `--moe-cache-mib` (upstream [#29887](https://github.com/ggml-org/llama.cpp/pull/29887)) keeps an LRU of the most
 used experts in VRAM, so a card that can't hold all experts still serves most tokens from VRAM. Decode climbs over the
 first few hundred tokens while it fills. A small cache on top of the old split was slower (20-21 tok/s), so give it
-the VRAM the experts would have used. Speculative decoding with the cache is untested.
+the VRAM the experts would have used. With the cache on, ngram-mod adds nothing, DSpark drafting 2 tokens adds 30-45% on code, and drafting 3 is slower than 2. Evals stay speculation-off ([#31472](https://github.com/ggml-org/llama.cpp/issues/31472)).
 
 ### What this build is and isn't
 

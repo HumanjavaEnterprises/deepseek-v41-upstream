@@ -55,6 +55,18 @@ llama-server -m DeepSeek-V4.1-Flash-1017-GSQ-RCO-upstream-IQ2_XXS-00001-of-00004
 ```
 Decode climbs over the first few hundred tokens while the cache fills. On a smaller card, shrink `--moe-cache-mib`.
 
+**Juice it: + DSpark speculative decoding (code ~80-100 tok/s).** Add unsloth's DSpark drafter (MIT, 8 GB) on the
+same card and trim the cache to make room:
+```bash
+hf download unsloth/DeepSeek-V4.1-Flash-1017-GGUF dspark-DeepSeek-V4.1-Flash-1017-Q8_0.gguf --local-dir dspark/
+# add to the command above (and use --moe-cache-mib 72000 instead of 80000):
+  --spec-type draft-dspark -md dspark/dspark-DeepSeek-V4.1-Flash-1017-Q8_0.gguf -ngld 99 --spec-draft-n-max 2
+```
+Measured 2026-11-03 on one 96 GB card: code **80-102 tok/s** (+30-45%, ~78-84% of drafts accepted), prose about the
+same (68-74). Drafting 3 tokens was slower than 2. ngram-mod gave nothing with the cache on. Measured on the
+abliterated build; same architecture and drafter here. Speculative output at temperature 0 isn't bit-identical to
+plain decoding ([#31472](https://github.com/ggml-org/llama.cpp/issues/31472)), so run evals with it off.
+
 **No cache / older llama.cpp:** keep all routed experts in RAM (~125 GB of RAM, ~18 tok/s):
 ```bash
 llama-server -m DeepSeek-V4.1-Flash-1017-GSQ-RCO-upstream-IQ2_XXS-00001-of-00004.gguf \
