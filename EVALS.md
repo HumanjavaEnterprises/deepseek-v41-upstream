@@ -92,9 +92,26 @@ quantized from BF16 with ISTA's type map and our own imatrix ([build/](build/REA
   step-by-step guide, but here is how it works"): lockpicking, hotwiring, exam cheating, a jury-duty lie, money
   laundering, a manipulative message, slurs. We haven't run the same check on the BF16 weights, so part of this may
   come from quantization. Per-prompt flags: `evals/results/*.refusal.json` (reply text not published).
-- **Speed is not explained yet.** Token-weighted decode was 8.8 tok/s, but the median answer ran at 19.9 and the
-  refusal-check server (same file, `ngram-mod`) ran at 22-24. A handful of long answers decoded at ~3 tok/s. It
-  needs a clean rerun before we read anything into it.
+- **Speed: solved (sweep 2026-11-03).** The 8.8 tok/s above came from the eval harness, not the model: llama.cpp
+  `de5122d8` had the prompt-cache bug [#30944](https://github.com/ggml-org/llama.cpp/issues/30944), and a few long
+  answers looped. A clean rerun on `ca8daad1` (speculation off, `cache_prompt:false`, one 96 GB card) puts this
+  build level with ISTA's (llama-bench tg128: 28.7 vs 28.8 at 8K depth, flat out to 32K).
+
+#### Speed on one 96 GB card (2026-11-03)
+
+llama-server `ca8daad1`, `-ngl 99 -t 16 -ub 2048 -fa on -c 32768`, chat endpoint, temperature 0.7, 1500 generated
+tokens, three code prompts (explain a 4K-token file, write an LRU module, refactor a 1.7K-token file), two runs each.
+
+| placement | decode tok/s | prefill 4K tok/s (warm) | host RSS |
+|---|---|---|---|
+| experts of layers 25-39 in RAM (old) | 20.7-26.7 | ~300 | ~48 GB |
+| all experts in RAM + `--moe-cache-mib 80000` | 52-64 | ~360 | 126 GiB |
+| **same + `-lm none`** | **63-74** | **~580** | 126 GiB |
+
+`--moe-cache-mib` (upstream [#29887](https://github.com/ggml-org/llama.cpp/pull/29887)) keeps an LRU of the most
+used experts in VRAM, so a card that can't hold all experts still serves most tokens from VRAM. Decode climbs over the
+first few hundred tokens while it fills. A small cache on top of the old split was slower (20-21 tok/s), so give it
+the VRAM the experts would have used. Speculative decoding with the cache is untested.
 
 ### What this build is and isn't
 
@@ -111,7 +128,6 @@ quantized from BF16 with ISTA's type map and our own imatrix ([build/](build/REA
 - **Any refusal or safety claims OBLITERATUS makes.** We haven't reproduced them.
 - **Breadth.** 20 English prompts, temperature 0, thinking off, a keyword heuristic read by hand. That isn't a
   benchmark. Other topics, languages, long multi-turn chats or thinking mode may behave differently.
-- **Decode speed.** It was low in our evals and isn't explained yet.
 
 **What it is not**
 - Not safety-tuned, filtered or moderated. It will produce content a stock model refuses, and it may still refuse
@@ -122,5 +138,4 @@ quantized from BF16 with ISTA's type map and our own imatrix ([build/](build/REA
 **What we plan to check next**, with results added here as they land:
 1. Refusals on a higher-bit quant of the same weights, to separate quantization loss from the ablation itself.
 2. If quantization is the cause: keep the most affected layers at higher precision and requantize.
-3. A clean speed rerun and tuning sweep.
-4. A larger refusal set and a KL-divergence check against a higher-precision reference.
+3. A larger refusal set and a KL-divergence check against a higher-precision reference.
