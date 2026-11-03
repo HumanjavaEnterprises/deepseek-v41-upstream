@@ -42,17 +42,20 @@ it stays on your SSD. Only ~138 GB has to fit in RAM + VRAM.
 
 ## Run it
 
-You need upstream llama.cpp **`de5122d8` (2026-10-27) or newer**, the first version with `deepseek41`.
+You need upstream llama.cpp **`de5122d8` (2026-10-27) or newer** (the first with `deepseek41`); **2026-11-03 or newer** for the fast command below.
 
-**One 96 GB card + RAM** (what we run: 64k context, experts of layers 0-24 on the card, 25-39 in RAM):
+**One 96 GB card + ~130 GB of free RAM** (what we run, 2026-11-03: **66-72 tok/s decode**, ~590 tok/s prefill warm).
+Every routed expert lives in RAM and `--moe-cache-mib` keeps the most-used ones in VRAM. Needs llama.cpp from
+2026-11-03 or newer (we use `ca8daad1`, which has the [#30944](https://github.com/ggml-org/llama.cpp/issues/30944) prompt-cache fix):
 ```bash
 llama-server -m DeepSeek-V4.1-Flash-1017-GSQ-RCO-upstream-IQ2_XXS-00001-of-00004.gguf \
-  -c 65536 -np 1 -ngl 99 -t 16 -ub 2048 --spec-type ngram-mod \
-  -ot 'blk\.(2[5-9]|3[0-9])\.ffn_(up|down|gate)_exps=CPU' \
+  -c 32768 -np 1 -ngl 99 -t 16 -ub 2048 -fa on \
+  -ot '_exps=CPU' --moe-cache-mib 80000 -lm none \
   --chat-template-kwargs '{"enable_thinking":false}'
 ```
+Decode climbs over the first few hundred tokens while the cache fills. On a smaller card, shrink `--moe-cache-mib`.
 
-**Smaller card:** keep all routed experts in RAM (~125 GB of RAM):
+**No cache / older llama.cpp:** keep all routed experts in RAM (~125 GB of RAM, ~18 tok/s):
 ```bash
 llama-server -m DeepSeek-V4.1-Flash-1017-GSQ-RCO-upstream-IQ2_XXS-00001-of-00004.gguf \
   -c 16384 -ngl 99 -t <physical cores> -ub 2048 -ot 'exps=CPU'
@@ -62,7 +65,7 @@ See [RECIPE.md](RECIPE.md) for the full tuning sweep and what each flag is worth
 
 ## Verified
 
-The published files were loaded with exactly the command above (stock llama.cpp `de5122d8`, one 96 GB GPU). They
+The published files were loaded on stock llama.cpp `de5122d8` with one 96 GB GPU. They
 answered 4/4 sanity prompts correctly at temperature 0: a fact, arithmetic, code and science. Every quantized tensor
 is byte-identical to ISTA's. All 17 derived metadata keys match unsloth's independent upstream conversion of the
 same model.
@@ -97,7 +100,8 @@ Hardware: 1× RTX PRO 6000 Blackwell Max-Q (96 GB), Xeon w5-3525 (16 cores), 256
 | all experts in RAM, 16 threads | 70 | 18.5 |
 | experts of layers 0-21 on card | 123 | 31.9 |
 | experts of layers 0-27 on card, `-ub 2048` (short ctx only; 96.1 GB peak at 64k) | **448** | 39-40 |
-| **layers 0-24 on card + `ngram-mod`, 64k ctx (what we run; 85.9 GB peak)** | ~250 | **37.8 code edits / 32 prose** |
+| layers 0-24 on card + `ngram-mod`, 64k ctx (85.9 GB peak, `de5122d8`) | ~250 | 37.8 code edits / 32 prose |
+| **all experts in RAM + `--moe-cache-mib 80000 -lm none` (`ca8daad1`, 2026-11-03)** | **~590** | **66-72** |
 
 Sanity check: 4/4 correct on a small fact, arithmetic, code and science set. This is a smoke test, not a quality
 benchmark. For quality, see [EVALS.md](EVALS.md).
