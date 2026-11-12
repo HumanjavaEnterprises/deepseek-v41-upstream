@@ -11,8 +11,9 @@ supply-chain reports seriously and handle them with priority.
 
 **Please report security issues privately. Do not open a public GitHub issue.**
 
-- Email **security@humanjava.com** with details and reproduction steps.
-- You can also use GitHub's **private vulnerability reporting** (Security tab → "Report a vulnerability").
+- Use GitHub's **private vulnerability reporting**: Security tab → "Report a vulnerability" (preferred; it reaches
+  the maintainers directly), or
+- email **security@humanjava.com** with details and reproduction steps.
 
 Please include:
 - A clear description and the impact (what an attacker could do).
