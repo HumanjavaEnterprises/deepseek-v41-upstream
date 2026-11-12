@@ -1,0 +1,17 @@
+name: Tool bug
+description: The repack or build tools fail, or a command in RECIPE.md doesn't work
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: The command, what you expected, and what you got (error output helps).
+    validations: {required: true}
+  - type: input
+    id: setup
+    attributes:
+      label: Your setup
+      description: OS, GPU and RAM, llama.cpp commit, tool commit, which GGUF / Hugging Face revision
+    validations: {required: true}

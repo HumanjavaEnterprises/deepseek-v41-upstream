@@ -1,0 +1,17 @@
+name: Model output problem
+description: The model loads but answers are wrong, garbled, or much slower than EVALS.md
+title: "[output] "
+labels: ["model-output"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What you sent and what came back
+      description: Prompt, settings (temperature, context, chat template), and the output.
+    validations: {required: true}
+  - type: input
+    id: setup
+    attributes:
+      label: Your setup
+      description: GPU and RAM, llama.cpp commit and flags, which GGUF and quant
+    validations: {required: true}

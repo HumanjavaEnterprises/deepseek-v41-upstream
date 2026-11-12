@@ -1,0 +1,11 @@
+name: Docs fix
+description: A typo, an unclear step, or something missing from the guide
+title: "[docs] "
+labels: ["documentation"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What should change
+      description: Link the file or section, and say what would make it clearer.
+    validations: {required: true}

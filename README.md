@@ -157,3 +157,8 @@ verify the weights' provenance.
   [unsloth's](https://huggingface.co/unsloth/DeepSeek-V4.1-Flash-1017-GGUF) (MIT). The calibration data's sources and
   licenses are in [build/calibration/SOURCES.md](build/calibration/SOURCES.md).
 - This repo: MIT, by [@vveerrgg](https://github.com/vveerrgg) / Humanjava Enterprises.
+
+## Contributing and security
+
+Bugs, output problems and docs fixes: see [CONTRIBUTING.md](CONTRIBUTING.md). Security issues: privately, see
+[SECURITY.md](SECURITY.md). Please follow the [code of conduct](CODE_OF_CONDUCT.md).
