@@ -162,3 +162,7 @@ verify the weights' provenance.
 
 Bugs, output problems and docs fixes: see [CONTRIBUTING.md](CONTRIBUTING.md). Security issues: privately, see
 [SECURITY.md](SECURITY.md). Please follow the [code of conduct](CODE_OF_CONDUCT.md).
+
+---
+
+Built by [Humanjava Enterprises](https://humanjava.com) · [Vergel Evans](https://vveerrgg.online) · [Get in touch](https://humanjava.com/#contact)
